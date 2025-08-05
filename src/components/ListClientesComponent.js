@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ClienteService from "../services/ClienteService";
+import { Link } from "react-router-dom";
 
 export const ListClientesComponent = () => {
     const [empleados, setEmpleados] = useState([]);
@@ -19,6 +20,7 @@ export const ListClientesComponent = () => {
     return (
         <div className="container">
             <h2 className="text-center">Lista de Empleados</h2>
+            <Link to='/add-cliente' className='btn btn-primary mb-2'>Agregar Cliente</Link>
             <table className="table">
                 <thead>
                     <tr>
@@ -26,6 +28,7 @@ export const ListClientesComponent = () => {
                         <th>Nombre</th>
                         <th>Apellido</th>
                         <th>Email</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -37,6 +40,10 @@ export const ListClientesComponent = () => {
                                     <td>{empleado.nombre}</td>
                                     <td>{empleado.apellido}</td>
                                     <td>{empleado.email}</td>
+                                    <td>
+                                        <Link className='btn btn-info' to={`/edit-cliente/${empleado.id}`}>Actualizar</Link>
+                                       
+                                    </td>
                                 </tr>
                             )
                         ) : (
