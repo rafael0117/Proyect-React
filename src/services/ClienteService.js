@@ -9,6 +9,15 @@ class ClienteService{
     saveCliente(cliente){
         return axios.post(API_URL,cliente)
     }
+    getClienteById(clienteId){
+        return axios.get(API_URL+'/'+clienteId)
+    }
+    updateCliente(clienteId,cliente){
+        return axios.put(API_URL+'/'+clienteId,cliente)
+    }
+    deleteCliente(clienteId){
+        return axios.delete(API_URL+'/'+clienteId)
+    }
 
 }
 export default new ClienteService

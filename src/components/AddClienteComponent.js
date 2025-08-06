@@ -1,30 +1,64 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ClienteService from '../services/ClienteService';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
 const AddClienteComponent = () => {
     const [nombre,setNombre]= useState('');
     const [apellido,setApellido]= useState('');
     const [email,setEmail]= useState('');
     const navigate = useNavigate();
+    const {id} = useParams();
 
 
-    const saveCliente = (e) => {
+    const saveOrUpdateCliente = (e) => {
         e.preventDefault();
         const cliente = {nombre,apellido,email}
-        ClienteService.saveCliente(cliente).then((response)=>{
+        if(id){
+            ClienteService.updateCliente(id,cliente).then((response)=>{
         console.log(response.data);
         navigate('/clientes');
         }).catch(error => {
             console.log(error)
         })
+
+        }
+        else{
+            ClienteService.saveCliente(cliente).then((response)=>{
+        console.log(response.data);
+        navigate('/clientes');
+        }).catch(error => {
+            console.log(error)
+        })
+        }
+        
+    }
+
+    useEffect(() =>{
+        ClienteService.getClienteById(id).then((response)=>{
+            setNombre(response.data.nombre);
+            setApellido(response.data.apellido);
+            setEmail(response.data.email);
+
+        }).catch(error =>{
+            console.log(error);
+        })
+    },[])
+    const title =() =>{
+        if(id){
+            return <h2 className='text-center'>Actualizar cliente</h2>
+        }
+        else{
+            return <h2 className='text-center'>Agregar cliente</h2>
+        }
     }
   return (
     <div>
         <div className='container'>
             <div className='row'>
                 <div className='card col-md-6 offset-md-3 offset-md-3'>
-                    <h2>Registro de clientes</h2>
+                    <h2>{
+                        title()
+                        }</h2>
                     <div className='card-body'>
                         <form method='post' >
                             <div className='form-group mb-2'>
@@ -66,7 +100,7 @@ const AddClienteComponent = () => {
                                 onChange={(e)=>setEmail(e.target.value)} 
                                 />
                             </div>
-                            <button className='btn btn-success' onClick={(e) => saveCliente(e)}>Guardar</button>
+                            <button className='btn btn-success' onClick={(e) => saveOrUpdateCliente(e)}>Guardar</button>
                             &nbsp;&nbsp;
                             <Link to='/clientes' className='btn btn-danger'>Cancelar</Link>
                             </form>
